@@ -1,5 +1,5 @@
 # rmd Presentations
-- sample presentations created from R
+sample presentations created from R
 
 ## Health Data Presentation
 ---------------------------
