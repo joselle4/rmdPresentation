@@ -1,0 +1,84 @@
+---
+title: "Termination Study"
+author: "Joselle Abagat"
+date: "October 11, 2017"
+output: 
+  slidy_presentation:
+    font_adjustment: -1
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+library(DT)
+library(scales)
+library(formattable)
+
+source("termStudy.R")
+
+empDT <- fread("rawdata.csv")
+compDT <- fread("comphistory.csv")
+termDT <- fread("termhist.csv")
+mbpDT <- fread("marketpay.csv")
+oc <- fread("otherComp.csv")
+```
+
+## Transmission Line Tech Termination Study 
+- NOTE: Press "k" to disable mouse click
+- Data current as of:
+
+-- 10/11/2017 (employee history)
+
+-- 10/11/2017 (termination history)
+
+-- 5/2/2017 (rating history)
+
+
+## Transmission Line Tech Turnover
+```{r, warning=FALSE}
+s <- subTurnOverByYear(empDT)
+```
+- From 2012-2016, Company X's avg turnover rate was approximately 6%; the line tech average turnover was `r mean(s$TurnOver[s$Year < 2017])`%, higher than the company average.
+- Turnover has been increasing since 2014
+- Using data from 2014-2016, regression analysis shows that we are predicting to lose 8 line techs in 2017. 
+- To date, we are already past the 8 predicted line techs; we have lost 12. 
+- Company X's turnover to date is at 5.6%.  Considering the company's low turnover rate, a job turnover at 25% thru Oct-2017 is problematic. 
+```{r, warning=FALSE}
+plotTurnOver(empDT)
+```
+
+
+## Terminated Line Techs in the Past Five Years
+```{r, echo=FALSE}
+term <- termedLineTechs(empDT, termDT)
+termCount <- term[ , .N, ActionCode][, 2]
+VolPercent <- percent(term[grep("RESIGNED", PA52ReasonCodeDesc), .N]/nrow(term))
+involPercent <- percent(term[grep("INVOL", PA52ReasonCodeDesc), .N]/nrow(term))
+nResigned <- term[grep("RESIGN", PA52ReasonCodeDesc), .N]
+nMoreMoney <- term[PA52ReasonCodeDesc == "RESIGNED - MORE MONEY", .N]
+```
+- Plot of the terminated line techs by reason code is provided below
+- Total number of terminated line techs in the last 5 years: `r nrow(term)`
+- `r VolPercent` of the line techs terminated voluntarily ("RESIGNED"")
+- `r percent(nMoreMoney/nrow(term))` of terminations was due to desire for more income
+- `r involPercent` was terminated involuntarily
+
+```{r}
+plotTermLineTechsReasonCode(term)
+```
+
+## Terminated Line Techs in the Past Five Years by Job Code
+```{r}
+plotTermLineTechsJobCode(empDT)
+```
+
+## Line Tech Current Compensation Study
+- Statistical box plot of current line tech salary by Job Code in comparison to market pay (total compensation and base)
+- The box plot provides the min, max, median, 25th and 75th percentile
+- The plot also includes the avg base salary and avg total compensation based on the base salary
+```{r, warning=FALSE}
+plotCurLineTechComp(empDT, mbpDT, oc)
+```
+
+
+## End
