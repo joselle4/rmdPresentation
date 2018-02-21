@@ -1,0 +1,83 @@
+---
+title: "Health Data"
+author: "Joselle Abagat Barnett"
+date: "January 11, 2018"
+output:
+  ioslides_presentation:
+    css: styles.css
+    fig_align: center
+    font_size: 8pt
+    incremental: no
+    self_contained: yes
+    smaller: yes
+    transition: faster
+  slidy_presentation:
+    smaller: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, fig.align='center')
+
+# load library
+library(data.table)
+library(dplyr)
+library(tidyr)
+library(reshape2)
+library(lubridate)
+library(scales)
+library(formattable)
+library(DT)
+library(jpeg)
+library(png)
+
+source("main.R")
+dt <- getData()
+```
+
+
+## | Blood Pressure 
+```{r, warning = FALSE}
+plotBP(dt)
+```
+<div class="centered" font-size=50px> Stages 1-2: 0 employees affected </div>  
+<div class="centered"> Stage 3: No employees in Stage 3 </div>
+
+## | Blood Pressure (BP) and Hypertension Treatment (HTN)
+```{r, warning = FALSE}
+plotBPHTN(dt)
+```
+
+## | Diabetes: A1c Diabetic Range
+```{r, warning = FALSE}
+plotA1c(dt)
+```
+
+##  | A1c Diabetic Range v.s. Diagnosed Diabetes
+```{r, warning = FALSE}
+plotA1cDiabetes(dt)
+```
+
+## | Diagnosed with OSA
+```{r, warning = FALSE}
+plotOSAbar(dt)
+```
+
+## | Body Mass Index (BMI)
+```{r, warning = FALSE}
+plotBMI(dt)
+```
+
+## | BMI Summary
+```{r, warning = FALSE}
+plotBMIbar(dt)
+```
+
+## | Comorbidity
+```{r, warning = FALSE}
+plotComorbidity(dt)
+```
+
+## | Vision and Hearing Test Counts
+```{r, warning = FALSE}
+plotVisionHearing(dt)
+```
